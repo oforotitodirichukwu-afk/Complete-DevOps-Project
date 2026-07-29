@@ -1,5 +1,5 @@
 image: 
-  respository: princep260471/complete-devops-project
+  repository: princep260471/complete-devops-project
   tag: 5fcb557
   pullPolicy: IfNotPresent
 service: 
@@ -11,5 +11,5 @@ serviceAccount:
   enabled: false
 autoScaling:
   enabled: false
-  
- 
+httpRoute:
+  enabled: false
