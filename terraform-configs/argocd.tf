@@ -1,10 +1,7 @@
 resource "helm_release" "argocd" {
   name             = "argocd"
-  
-  # OCI registry configuration
-  repository       = "oci://ghcr.io/argoproj/argo-helm"
   chart            = "argo-cd"
-  
+  repository       = "https://argoproj.github.io/argo-helm"
   namespace        = "argocd"
   create_namespace = true
 
@@ -17,6 +14,8 @@ resource "helm_release" "argocd" {
     server:
       service:
         type: ClusterIP
+    httpRoute:
+      enabled: false
     EOF
   ]
 }
