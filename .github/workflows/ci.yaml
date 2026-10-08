@@ -10,7 +10,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Set Short SHA
         run: |
@@ -39,3 +39,9 @@ jobs:
           git add ./complete-devops-project-time-printer/values.yaml
           git commit -m "Update image tag ${{ env.SHORT_SHA }}"
           git push origin main
+       - name: Smoke Test Container
+         run: |
+          docker run -d --name smoke -p 8080:8080 princep260471/complete-devops-project:${{ env.SHORT_SHA }}
+          sleep 5
+          curl --fail http://localhost:8080/
+          docker rm -f smoke
