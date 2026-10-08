@@ -12,19 +12,19 @@ In this project, I built a fully automated CI/CD pipeline from the ground up:
 
 
 ## The Architecture at a Glance
-* - Terraform $\rightarrow$ Provisions local Kubernetes infrastructure.
+ - Terraform $\rightarrow$ Provisions local Kubernetes infrastructure.
 
-* - Flask Application $\rightarrow$ A microservice exposing the current system time over HTTP.
+ - Flask Application $\rightarrow$ A microservice exposing the current system time over HTTP.
 
-* - Docker & Docker Hub $\rightarrow$ Containerizes the app and hosts image versions.
+ - Docker & Docker Hub $\rightarrow$ Containerizes the app and hosts image versions.
 
-* - Helm $\rightarrow$ Packages the deployment, service, and configuration files into a reusable chart.
+ - Helm $\rightarrow$ Packages the deployment, service, and configuration files into a reusable chart.
 
-* - GitHub Actions $\rightarrow$ Automates the CI process (build & push to Docker Hub).
+ - GitHub Actions $\rightarrow$ Automates the CI process (build & push to Docker Hub).
 
-* - ArgoCD $\rightarrow$ Automates continuous delivery directly inside the Kubernetes cluster using Git as the source of truth.
+ - ArgoCD $\rightarrow$ Automates continuous delivery directly inside the Kubernetes cluster using Git as the source of truth.
     
-<img width="3102" height="738" alt="code" src="https://github.com/user-attachments/assets/af5f0904-8fb5-4f50-8f3a-1e0b3f3eb3b5" />
+<img width="3102" height="738" alt="Architecture diagram" src="https://github.com/user-attachments/assets/af5f0904-8fb5-4f50-8f3a-1e0b3f3eb3b5" />
 
 
 ## Troubleshooting & Overcoming Key Project Roadblocks
@@ -32,9 +32,11 @@ Building an end-to-end pipeline rarely goes smoothly on the first attempt. Throu
 Here is a look back at the key technical hurdles I tackled: 
 
 ### 1. Docker Desktop & Architecture Compatibility Issues
+
 - **The Issue:** Early in setup, Docker compatibility errors hit because of architecture mismatches between Apple Silicon vs. Intel Mac builds on macOS.
 
 - **The Fix:** Identified that the local environment was running on an Intel-based MacBook Pro (2019 Intel Chip) and adjusted the Docker installation to match the Intel architecture.
+  
 <img width="1440" height="900" alt="Screenshot 2026-07-31 at 5 01 02 am" src="https://github.com/user-attachments/assets/33b516de-68f7-4cb6-b99f-d61dff33a163"/>
 ### 2. ArgoCD CLI Session & Network Expiration
 - **The Issue:** When trying to register the GitHub repository with ArgoCD via CLI `argocd repo add`, terminal operations threw invalid session: token signature is invalid and transport: failed to write client preface.
@@ -50,6 +52,7 @@ Here is a look back at the key technical hurdles I tackled:
 - **The Issue:** ArgoCD kept reporting repository not found even with valid credentials.
   
 - **The Fix:** Corrected placeholder URLs `YOUR_REPO_NAME` and malformed Git paths `.../https:/...` to point precisely to the correct repository path ([https://github.com/oforotitodirichukwu-afk/complete-devops-project.git](https://github.com/oforotitodirichukwu-afk/complete-devops-project.git)).
+  
 <img width="1440" height="900" alt="Screenshot 2026-07-31 at 5 00 00 am" src="https://github.com/user-attachments/assets/56020d61-6158-470e-b233-e48e5536dd17"/>
 <img width="1440" height="900" alt="Screenshot 2026-07-31 at 12 28 04 pm" src="https://github.com/user-attachments/assets/bb37dc8c-8d4f-4380-9f7d-2d8af158cb0a"/>
 ### 5. The "Degraded / Exit Code 0" Pod Health Loop
@@ -64,13 +67,13 @@ Here is a look back at the key technical hurdles I tackled:
 ## Real-World Production Considerations
 While this project successfully showcases core GitOps concepts, transitioning a setup like this into a high-scale production environment requires several additional layers:
 
- * - Comprehensive Testing: Production pipelines need unit tests, integration tests, and end-to-end (E2E) testing stages embedded into GitHub Actions before any image is built.
+ - Comprehensive Testing: Production pipelines need unit tests, integration tests, and end-to-end (E2E) testing stages embedded into GitHub Actions before any image is built.
 
-* - Security & Vulnerability Scanning: Integrating tools like Trivy, Grype, or SonarQube to scan container images and code dependencies for vulnerabilities prior to deployment.
+ - Security & Vulnerability Scanning: Integrating tools like Trivy, Grype, or SonarQube to scan container images and code dependencies for vulnerabilities prior to deployment.
 
-* - Multi-Environment Promotion: Moving code through Dev $\rightarrow$ Staging $\rightarrow$ Production using environment-specific Git branches or directory structures in Helm/Kustomize.
+ - Multi-Environment Promotion: Moving code through Dev $\rightarrow$ Staging $\rightarrow$ Production using environment-specific Git branches or directory structures in Helm/Kustomize.
 
-* - Deployment Gates & Approvals: Implementing manual approval steps, canary deployments, or blue/green strategies to minimise downtime and mitigate operational risk.
+ - Deployment Gates & Approvals: Implementing manual approval steps, canary deployments, or blue/green strategies to minimise downtime and mitigate operational risk.
 
 ## Conclusion
 
