@@ -1,7 +1,7 @@
 Building a Fully Automated GitOps CI/CD Pipeline on Kubernetes: From Infrastructure to Deployment
 
-Setting up a complete GitOps-driven CI/CD pipeline from scratch is one of the most rewarding endeavors in modern DevOps. By pairing infrastructure management tools, containerization, automated testing/building, and continuous delivery, we can turn manual deployment headaches into a seamless, automated flow.
-In this project, we built a fully automated CI/CD pipeline from the ground up:
+Setting up a complete GitOps-driven CI/CD pipeline from scratch is one of the most rewarding endeavors in modern DevOps. By pairing infrastructure management tools, containerization, automated testing/building, and continuous delivery, I can turn manual deployment headaches into a seamless, automated flow.
+In this project, I built a fully automated CI/CD pipeline from the ground up:
 
 1. Infrastructure Provisioning: Spun up local Kubernetes (Minikube/Kind) using Terraform.
 2. Containerization: Packaged a Python Flask time-printing application with Docker.
@@ -24,13 +24,36 @@ The Architecture at a Glance
 
 * ArgoCD $\rightarrow$ Automates continuous delivery directly inside the Kubernetes cluster using Git as the source of truth.
 
-  <img width="1536" height="1024" alt="ChatGPT Image Aug 2, 2026, 12_34_58 PM" src="https://github.com/user-attachments/assets/72765495-cc5a-4348-9c65-5a73043c9bf7" />
+ ```mermaid
+flowchart LR
+    subgraph Dev["Development"]
+        SRC["Flask app source(GitHub repo)"]
+        GHA["GitHub Actionstest -> build -> push"]
+        SRC --> GHA
+    end
+
+    TF["Terraformprovisions local cluster"]
+    KIND["Minikube / KindKubernetes cluster"]
+    DH["Docker Hubimage registry"]
+    HELM["Helm chartdeployment + service"]
+
+    subgraph Cluster["Kubernetes Cluster"]
+        ARGO["ArgoCDsyncs from Git"]
+        APP["Flask app Pods"]
+        ARGO --> APP
+    end
+
+    TF --> KIND
+    GHA --> DH
+    DH --> ARGO
+    HELM --> ARGO
+```
 
 ￼
 
 Troubleshooting & Overcoming Key Project Roadblocks
-Building an end-to-end pipeline rarely goes completely smooth on the first attempt. Throughout this journey, several real-world issues emerged during deployment and authentication. Special credit goes to Gemini AI, which acted as a real-time collaborative troubleshooting partner to diagnose, debug, and resolve these issues efficiently.
-Here is a look back at the key technical hurdles we tackled together:
+Building an end-to-end pipeline rarely goes smoothly on the first attempt. Throughout this project I hit and resolved several real-world issues around deployment and authentication — the key ones are documented below.
+Here is a look back at the key technical hurdles  I tackled :
 
 1. Docker Desktop & Architecture Compatibility Issues
 * The Issue: Early in setup, Docker compatibility errors hit because of architecture mismatches between Apple Silicon vs. Intel Mac builds on macOS.
@@ -100,5 +123,5 @@ While this project successfully showcases core GitOps concepts, transitioning a 
 Conclusion
 
 This project highlights the true power of combining Terraform, Docker, Helm, GitHub Actions, and ArgoCD into a single cohesive GitOps pipeline.
-By offloading manual steps to automated workflows and utilizing Gemini AI for fast, effective troubleshooting when blockers arose, we established a clean foundation for managing and scaling cloud-native applications on Kubernetes.
+By offloading manual steps to automated workflows and utilizing the solutins of others who have encountered some of these issues for fast, effective troubleshooting when blockers arose, we established a clean foundation for managing and scaling cloud-native applications on Kubernetes.
 
