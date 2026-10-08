@@ -1,6 +1,6 @@
 image: 
   repository: princep260471/complete-devops-project
-  tag: 817f7da
+  tag: b3b79af
   pullPolicy: IfNotPresent
 service: 
   type: ClusterIP
